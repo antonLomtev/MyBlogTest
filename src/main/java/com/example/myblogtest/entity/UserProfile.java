@@ -43,8 +43,12 @@ public class UserProfile {
     @JsonIgnore
     private User user;
 
+    private String imageUri;
+
     @OneToMany(mappedBy = "userProfile",cascade = CascadeType.ALL)
     private List<Post> posts = new ArrayList<>();
+
+    @Column(columnDefinition = "longblob", name = "data")
     @Lob
     private byte[] data;
 
