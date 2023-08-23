@@ -4,11 +4,14 @@ import com.example.myblogtest.entity.UserProfile;
 import com.example.myblogtest.repository.UserProfileRepository;
 import com.example.myblogtest.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -63,6 +66,19 @@ public class DBUserProfileStorage {
             userProfile.setData(file.getBytes());
             return userProfileRepository.save(userProfile);
         }catch (IOException ex){
+            throw new NoSuchElementException();
+        }
+    }
+    public Resource loadFileAsResource(String fileName){
+        try{
+            Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+            if(resource.exists()){
+                return resource;
+            }else {
+                throw new NoSuchElementException();
+            }
+        }catch (MalformedURLException exception){
             throw new NoSuchElementException();
         }
     }
