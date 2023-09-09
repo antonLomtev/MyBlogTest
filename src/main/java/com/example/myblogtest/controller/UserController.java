@@ -3,10 +3,13 @@ package com.example.myblogtest.controller;
 import com.example.myblogtest.entity.Comment;
 import com.example.myblogtest.entity.Post;
 import com.example.myblogtest.entity.User;
+import com.example.myblogtest.entity.enums.Priority;
+import com.example.myblogtest.entity.enums.Status;
 import com.example.myblogtest.repository.CommentRepository;
 import com.example.myblogtest.repository.PostRepository;
 import com.example.myblogtest.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +22,7 @@ import java.util.NoSuchElementException;
 @RequestMapping("/users")
 @AllArgsConstructor
 public class UserController {
+    @Autowired
     private UserRepository userRepository;
     private PostRepository postRepository;
     private CommentRepository commentRepository;
@@ -56,6 +60,32 @@ public class UserController {
 
         return userRepository.save(createUser);
     }
+    @PutMapping("/change/{userId}")
+    public User changedUser(@PathVariable Long userId){
+        User user = userRepository.findById(userId).get();
+        user.setStatus2(Status.REVIEW);
+        userRepository.save(user);
+        return user;
+    }
+//    @GetMapping("/getuserstatus/")
+//    public List<User> getUsersByStatus(@RequestParam String status2){
+//        Status status = Status.valueOf(status2);
+//        return  userRepository.getUsersForUserStatus2(status);
+//    }
+    @PutMapping("/chang1/{userID}/")
+    public  User changeStatusUserId1(@PathVariable Long userID){
+        User user = userRepository.findById(userID).get();
+//        user.setPriority(Priority.HIGH);
+
+        return userRepository.save(user);
+    }
+//    @PutMapping("/chang/{userID}/")
+//    public  ResponseEntity changeStatusUserId(@PathVariable Long userID,
+//                                    @RequestParam String status2){
+//        Status status = Status.valueOf(status2);
+//        userRepository.updateStatusUserId(userID, status);
+//        return ResponseEntity.ok().build();
+//    }
     @PutMapping("/{userId}")
     public User updateUser(@PathVariable Long userId,
                            @RequestBody User updateUser){

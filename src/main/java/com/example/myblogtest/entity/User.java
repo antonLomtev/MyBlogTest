@@ -1,5 +1,8 @@
 package com.example.myblogtest.entity;
 
+import com.example.myblogtest.entity.enums.Priority;
+import com.example.myblogtest.entity.enums.Status;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -40,4 +43,26 @@ public class User {
                cascade = CascadeType.ALL,
                mappedBy = "user")
     private UserProfile userProfile;
+    @Enumerated(EnumType.ORDINAL)
+    private Status status;
+    @Enumerated(EnumType.STRING)
+    private Status status2;
+
+    @Basic
+    private int priorityValue;
+    @Transient
+    @JsonIgnore
+    private Priority priority;
+    @PostLoad
+    void fillTransient(){
+        if(priorityValue > 0) {
+            this.priority = Priority.of(priorityValue);
+        }
+    }
+    @PrePersist
+    void fillPersist(){
+        if(priority != null) {
+            this.priorityValue = priority.getPriority();
+        }
+    }
 }

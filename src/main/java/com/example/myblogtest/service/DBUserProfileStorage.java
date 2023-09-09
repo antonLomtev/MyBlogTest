@@ -25,7 +25,7 @@ public class DBUserProfileStorage {
     @Autowired
     private UserRepository userRepository;
     private final Path fileStorageLocation = Paths.get("downloads")
-            .toAbsolutePath().normalize();;
+            .toAbsolutePath().normalize();
 
 
     {
